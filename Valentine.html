@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Valentine Level Up</title>
+
+<style>
+body{
+  font-family: Arial, sans-serif;
+  background:#ffe6e6;
+  color:#b30059;
+  text-align:center;
+  padding:25px;
+  overflow:hidden;
+}
+
+button{
+  padding:14px 26px;
+  margin:10px;
+  font-size:1.1rem;
+  border:none;
+  border-radius:14px;
+  cursor:pointer;
+}
+
+#yesBtn{background:#ff4d94;color:#fff;}
+#noBtn{background:#ccc;color:#555;position:absolute;}
+
+.hidden{display:none;}
+
+.option-btn{
+  background:#ff99c8;
+  color:#7a003c;
+  width:85%;
+  max-width:300px;
+}
+
+.option-btn:disabled{
+  background:#ddd;
+  color:#999;
+}
+
+#message{
+  font-size:1.3rem;
+  margin-top:20px;
+  font-weight:bold;
+}
+
+/* Hearts */
+.heart{
+  position:fixed;
+  font-size:22px;
+  animation:fall 3s linear forwards;
+}
+
+@keyframes fall{
+  from{transform:translateY(-10px);opacity:1;}
+  to{transform:translateY(100vh);opacity:0;}
+}
+</style>
+</head>
+
+<body>
+
+<h1 id="mainText">Will you be my valentine?</h1>
+
+<button id="yesBtn">Yes</button>
+<button id="noBtn">No</button>
+
+<!-- Are you sure screen -->
+<div id="confirmBox" class="hidden">
+  <h2>Are you really sure? 🥹💖</h2>
+  <button id="confirmYes">Absolutely Yes</button>
+</div>
+
+<!-- Options -->
+<div id="options" class="hidden">
+  <h2>Here are things to do this Valentine</h2>
+
+  <button class="option-btn" data-msg="Ghar pe so jaate hai">Massage</button>
+  <button class="option-btn" data-msg="You're in for a treat">Pcm</button>
+  <button class="option-btn" data-msg="Ab toh kahin new jagah chalna he padega">Hugs</button>
+  <button class="option-btn" data-msg="Shopping spree">Kisses</button>
+
+  <div id="message"></div>
+</div>
+
+<audio id="popSound">
+  <source src="https://assets.mixkit.co/sfx/preview/mixkit-happy-pop-2062.mp3">
+</audio>
+
+<script>
+const noBtn = document.getElementById("noBtn");
+const yesBtn = document.getElementById("yesBtn");
+const confirmBox = document.getElementById("confirmBox");
+const confirmYes = document.getElementById("confirmYes");
+const options = document.getElementById("options");
+const optionBtns = document.querySelectorAll(".option-btn");
+const message = document.getElementById("message");
+const sound = document.getElementById("popSound");
+
+let shrink = 1;
+
+// No button chaos
+function moveNo(){
+  shrink -= 0.08;
+  if(shrink < 0.4) shrink = 0.4;
+  noBtn.style.transform = `scale(${shrink})`;
+  noBtn.style.left = Math.random()*(window.innerWidth-80)+"px";
+  noBtn.style.top = Math.random()*(window.innerHeight-60)+"px";
+}
+noBtn.addEventListener("mouseenter",moveNo);
+noBtn.addEventListener("touchstart",moveNo);
+
+// Yes click
+yesBtn.onclick=()=>{
+  yesBtn.style.display="none";
+  noBtn.style.display="none";
+  confirmBox.classList.remove("hidden");
+};
+
+confirmYes.onclick=()=>{
+  confirmBox.classList.add("hidden");
+  options.classList.remove("hidden");
+};
+
+// Options logic
+optionBtns.forEach(btn=>{
+  btn.onclick=()=>{
+    optionBtns.forEach(b=>b.disabled=true);
+    message.innerText=btn.dataset.msg+"\n\n📸 Screenshot this moment 💖";
+    sound.play();
+    hearts();
+  };
+});
+
+// Hearts animation
+function hearts(){
+  for(let i=0;i<30;i++){
+    const h=document.createElement("div");
+    h.className="heart";
+    h.innerText="❤️";
+    h.style.left=Math.random()*100+"vw";
+    document.body.appendChild(h);
+    setTimeout(()=>h.remove(),3000);
+  }
+}
+</script>
+
+</body>
+</html>
+
